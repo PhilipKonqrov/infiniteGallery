@@ -19,7 +19,10 @@ class ImageDetailsViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        setupUI()
+    }
+    
+    private func setupUI() {
         closeImageView.isUserInteractionEnabled = true
         closeImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(closeImage)))
         favouriteImageView.isUserInteractionEnabled = true
@@ -29,13 +32,10 @@ class ImageDetailsViewController: UIViewController {
         if let date = imageObject?.dateCreated.toDate() {
             imageDateLabel.text = "Date created: \(date.toString())"
         }
-        
         if let likes = imageObject?.likes {
             imageLikesCountLabel.text = "Likes count: \(likes)"
         }
-        
         favouriteImageView.tintColor = isImageFavourite ? .red : .white
-        
         downloadImage()
     }
     
@@ -45,27 +45,37 @@ class ImageDetailsViewController: UIViewController {
     
     @objc private func favouriteImage() {
         guard let imageIdentifier = imageObject?.id else { return }
-        let defaults = UserDefaults.standard
-        
         if isImageFavourite {
-            defaults.removeObject(forKey: "favourites-\(imageIdentifier)")
+            do {
+                let fileURLs = try FileManager.default.contentsOfDirectory(at: .favouritesDirectory(), includingPropertiesForKeys: nil)
+                if let urlToDelete = fileURLs.first(where: { $0.absoluteString.contains("favourites-\(imageIdentifier)")}) {
+                    try FileManager.default.removeItem(at: urlToDelete)
+                }
+            } catch { print("Error while removing favourite: \(error.localizedDescription)") }
         } else {
-            let encoder = JSONEncoder()
-            if let encoded = try? encoder.encode(imageObject) {
-                defaults.set(encoded, forKey: "favourites-\(imageIdentifier)")
+            do {
+                let recentSearchesDirectory: URL = .favouritesDirectory()
+                try FileManager.default.createDirectory(at: recentSearchesDirectory, withIntermediateDirectories: true, attributes: nil)
+                let encoder = JSONEncoder()
+                let encoded = try encoder.encode(imageObject)
+                try encoded.write(to: recentSearchesDirectory.appendingPathComponent("favourites-\(imageIdentifier)"))
+            } catch {
+                print("[Image] failed writing data to disk, with error: \(error)")
             }
         }
-        
         favouriteImageView.tintColor = isImageFavourite ? .red : .white
     }
     
     var isImageFavourite: Bool {
         guard let imageIdentifier = imageObject?.id else { return false }
-        let defaults = UserDefaults.standard
-        guard let _ = defaults.object(forKey: "favourites-\(imageIdentifier)") else {
-            return false
-        }
-        return true
+        do {
+            let fileURLs = try FileManager.default.contentsOfDirectory(at: .favouritesDirectory(), includingPropertiesForKeys: nil)
+            if fileURLs.contains(where: { $0.absoluteString.contains("favourites-\(imageIdentifier)")}) {
+                return true
+            }
+        } catch { print("Error while checking favourite: \(error.localizedDescription)") }
+        
+        return false
     }
 
     private func downloadImage() {

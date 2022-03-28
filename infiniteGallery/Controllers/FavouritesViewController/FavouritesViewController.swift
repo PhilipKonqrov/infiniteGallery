@@ -15,13 +15,7 @@ class FavouritesViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        title = "Favourites"
-        self.navigationController?.navigationBar.barStyle = .black
-        self.navigationController?.navigationBar.isTranslucent = false
-        self.navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.white]
-        self.navigationController?.navigationBar.largeTitleTextAttributes = [.foregroundColor: UIColor.white]
-        
+        setupUI()
         tableView.dataSource = self
         tableView.delegate = self
     }
@@ -30,32 +24,38 @@ class FavouritesViewController: UIViewController {
         super.viewWillAppear(animated)
         loadFavouriteImages()
     }
+    
+    private func setupUI() {
+        title = "Favourites"
+        self.navigationController?.navigationBar.barStyle = .black
+        self.navigationController?.navigationBar.isTranslucent = false
+        self.navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.white]
+        self.navigationController?.navigationBar.largeTitleTextAttributes = [.foregroundColor: UIColor.white]
+    }
 
     private func loadFavouriteImages() {
         favouriteImageObjects = []
-        let defaults = UserDefaults.standard
-        
-        let keys = defaults.dictionaryRepresentation().keys.filter { $0.hasPrefix("favourites-") }
-        
-        for key in keys {
-            if let savedPerson = defaults.object(forKey: key) as? Data {
+        do {
+            let fileURLs = try FileManager.default.contentsOfDirectory(at: .favouritesDirectory(), includingPropertiesForKeys: nil)
+            for url in fileURLs {
                 let decoder = JSONDecoder()
-                if let loadedImage = try? decoder.decode(Image.self, from: savedPerson) {
-                    favouriteImageObjects.append(loadedImage)
-                }
+                let data = try Data(contentsOf: url)
+                let loadedImage = try decoder.decode(Image.self, from: data)
+                favouriteImageObjects.append(loadedImage)
             }
-        }
+        } catch { print("Error while loading favourite: \(error.localizedDescription)") }
         tableView.reloadData()
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         super.prepare(for: segue, sender: sender)
-        
         if let detailsVC = segue.destination as? ImageDetailsViewController {
             detailsVC.imageObject = sender as? Image
         }
     }
 }
+
+// MARK: - CollectionView Delegate methods
 
 extension FavouritesViewController: UITableViewDataSource, UITableViewDelegate {
     

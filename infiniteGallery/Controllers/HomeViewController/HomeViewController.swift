@@ -32,7 +32,6 @@ class HomeViewController: UIViewController {
         self.navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.white]
         self.navigationController?.navigationBar.largeTitleTextAttributes = [.foregroundColor: UIColor.white]
         
-        
         collectionView.register(UINib(nibName:"TileImageCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: TileImageCollectionViewCell.className)
         collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "default")
         collectionView.delegate = self
@@ -41,9 +40,8 @@ class HomeViewController: UIViewController {
         
         viewModel?.fetchGallery(searchTerm: "popular")
         
-        setupAppearanceSubscription()
         setupItemSubscriptions()
-        
+        observeRecentSearchTapped()
         
         dataSource = UICollectionViewDiffableDataSource<Int, Image>(collectionView: collectionView) { collectionView, indexPath, image in
             guard let productCell = collectionView.dequeueReusableCell(withReuseIdentifier: TileImageCollectionViewCell.className, for: indexPath) as? TileImageCollectionViewCell else { return UICollectionViewCell() }
@@ -76,30 +74,26 @@ extension HomeViewController: UISearchBarDelegate {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         guard let searchQuery = searchBar.text else { return }
         let query = searchQuery.replacingOccurrences(of: " ", with: ",")
-        
         viewModel?.fetchGallery(searchTerm: query.lowercased())
+        
+        // Save recent searches
+        do {
+            let recentSearchesDirectory: URL = .recentSearchesDirectory()
+            try FileManager.default.createDirectory(at: recentSearchesDirectory, withIntermediateDirectories: true, attributes: nil)
+            try Data(searchQuery.utf8).write(to: recentSearchesDirectory.appendingPathComponent("recentSearches-\(Date().timeIntervalSince1970)"))
+        } catch {
+            print("[Image] failed writing data to disk, with error: \(error)")
+        }
+    }
+    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        viewModel?.fetchGallery(searchTerm: "popular")
     }
 }
 
 // MARK: - Combine Subscriptions
 
 extension HomeViewController {
-    private func setupAppearanceSubscription() {
-        viewModel?.uiStatePublisher
-            .receive(on: RunLoop.main)
-            .sink { [weak self] state in
-                guard let self = self else { return }
-
-//                switch state {
-//                case .listImages:
-//                    self.collectionView?.alpha = 1
-//                case .loading:
-//                    self.collectionView?.alpha = 0
-//                }
-            }
-            .store(in: &cancellables)
-    }
-    
     private func setupItemSubscriptions() {
         viewModel?.itemsChangedPublisher
             .receive(on: RunLoop.main)
@@ -108,6 +102,21 @@ extension HomeViewController {
                 snapshot.appendSections([0])
                 snapshot.appendItems(items)
                 self?.dataSource?.apply(snapshot, animatingDifferences: !items.isEmpty)
+            }
+            .store(in: &cancellables)
+    }
+    
+    /// Start listening for `recentSearchTapped` notification.
+    /// When this notification is posted, start searching with the sent search phrase.
+    private func observeRecentSearchTapped() {
+        NotificationCenter.default
+            .publisher(for: Notification.Name.recentSearchTapped)
+            .sink { [weak self] notification in
+                guard let strongSelf = self else { return }
+                guard let recentSearchText = notification.object as? String else { return }
+                
+                strongSelf.searchController.searchBar.text = recentSearchText
+                strongSelf.viewModel?.fetchGallery(searchTerm: recentSearchText)
             }
             .store(in: &cancellables)
     }

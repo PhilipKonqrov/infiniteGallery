@@ -15,8 +15,6 @@ class FavouriteImageCell: UITableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        // Initialization code
-        
         favImageView.layer.masksToBounds = true
         favImageView.layer.cornerRadius = favImageView.bounds.width / 2
     }

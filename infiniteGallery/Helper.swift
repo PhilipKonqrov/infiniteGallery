@@ -23,8 +23,6 @@ extension UIView {
     }
 }
 
-// MARK: - Caches Directory
-
 extension URL {
     /// Creates a URL instance pointing to the first entry of `NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true)`'s result.
     ///
@@ -34,6 +32,24 @@ extension URL {
         let path = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true)[0]
         var url = URL(fileURLWithPath: path, isDirectory: false)
         url.appendPathComponent(subDirectory)
+        return url
+    }
+    
+    /// Creates a URL instance pointing to the first entry of `NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)`'s result.
+    /// - Returns: URL pointing to the `.favouritesDirectory` of the user.
+    static func favouritesDirectory() -> URL {
+        let path = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]
+        var url = URL(fileURLWithPath: path, isDirectory: false)
+        url.appendPathComponent("favourites")
+        return url
+    }
+    
+    /// Creates a URL instance pointing to the first entry of `NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)`'s result.
+    /// - Returns: URL pointing to the `.recentSearchesDirectory` of the user.
+    static func recentSearchesDirectory() -> URL {
+        let path = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]
+        var url = URL(fileURLWithPath: path, isDirectory: false)
+        url.appendPathComponent("recent")
         return url
     }
 }

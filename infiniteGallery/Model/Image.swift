@@ -62,30 +62,30 @@ extension Image {
     func cacheOnDisk(with imageData: Data?) {
         do {
             
-            let cacheDirectory: URL = .cachesDirectory(withSubdirectory: "ProductFilterImageCache")
+            let cacheDirectory: URL = .cachesDirectory(withSubdirectory: "ImageCache")
             try FileManager.default.createDirectory(at: cacheDirectory, withIntermediateDirectories: true, attributes: nil)
             try imageData?.write(to: cacheDirectory.appendingPathComponent(id))
         } catch {
-            print("[ProductCategoryItem] failed writing image data to disk, with error: \(error)")
+            print("[Image] failed writing image data to disk, with error: \(error)")
         }
     }
 
     func deleteCacheFromDisk() {
         do {
-            let cacheDirectory: URL = .cachesDirectory(withSubdirectory: "ProductFilterImageCache")
+            let cacheDirectory: URL = .cachesDirectory(withSubdirectory: "ImageCache")
             try FileManager.default.removeItem(at: cacheDirectory.appendingPathComponent(id))
         } catch {
-            print("[ProductCategoryItem] failed deleting image data from disk, with error: \(error)")
+            print("[Image] failed deleting image data from disk, with error: \(error)")
         }
     }
 
     func loadFromCache() -> UIImage? {
         do {
-            let cacheDirectory: URL = .cachesDirectory(withSubdirectory: "ProductFilterImageCache")
+            let cacheDirectory: URL = .cachesDirectory(withSubdirectory: "ImageCache")
             let data = try Data(contentsOf: cacheDirectory.appendingPathComponent(id))
             return UIImage(data: data)
         } catch {
-            print("[ProductCategoryItem] failed loading image data from disk, with error: \(error)")
+            print("[Image] failed loading image data from disk, with error: \(error)")
         }
         return nil
     }

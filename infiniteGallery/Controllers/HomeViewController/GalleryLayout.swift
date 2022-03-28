@@ -9,19 +9,15 @@ import UIKit
 
 public class GalleryLayout: UICollectionViewLayout {
     
-    /**
-     Delegate.
-     */
-    public var delegate: GalleryLayoutDelegate!
-    /**
-     Number of columns.
-     */
-    public var numberOfColumns: Int = 1
-    /**
-     Cell padding.
-     */
-    public var cellPadding: CGFloat = 0
     
+     /// Delegate.
+    public var delegate: GalleryLayoutDelegate!
+    
+    /// Number of columns.
+    public var numberOfColumns: Int = 1
+    
+    /// Cell padding.
+    public var cellPadding: CGFloat = 0
     
     private var cache = [GalleryLayoutAttributes]()
     private var contentHeight: CGFloat = 0
@@ -58,9 +54,7 @@ public class GalleryLayout: UICollectionViewLayout {
         return collectionView.numberOfItems(inSection: section)
     }
     
-    /**
-     Invalidates layout.
-     */
+    /// Invalidates layout.
     override public func invalidateLayout() {
         cache.removeAll()
         contentHeight = 0
