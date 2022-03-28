@@ -12,7 +12,7 @@
         <!--Home View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="HomeViewController" customModule="infiniteGallery" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="HomeViewController" id="BYZ-38-t0r" customClass="HomeViewController" customModule="infiniteGallery" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -161,7 +161,7 @@
         <!--Favourites View Controller-->
         <scene sceneID="9gB-11-yAs">
             <objects>
-                <viewController id="cn2-sm-WA9" customClass="FavouritesViewController" customModule="infiniteGallery" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="FavouritesViewController" id="cn2-sm-WA9" customClass="FavouritesViewController" customModule="infiniteGallery" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="jGM-eg-CJP">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

@@ -66,7 +66,7 @@ class ImageDetailsViewController: UIViewController {
         favouriteImageView.tintColor = isImageFavourite ? .red : .white
     }
     
-    var isImageFavourite: Bool {
+    private var isImageFavourite: Bool {
         guard let imageIdentifier = imageObject?.id else { return false }
         do {
             let fileURLs = try FileManager.default.contentsOfDirectory(at: .favouritesDirectory(), includingPropertiesForKeys: nil)

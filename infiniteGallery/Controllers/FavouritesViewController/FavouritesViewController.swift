@@ -9,7 +9,7 @@ import UIKit
 
 class FavouritesViewController: UIViewController {
 
-    @IBOutlet var tableView: UITableView!
+    @IBOutlet private var tableView: UITableView!
     
     var favouriteImageObjects: [Image] = []
     

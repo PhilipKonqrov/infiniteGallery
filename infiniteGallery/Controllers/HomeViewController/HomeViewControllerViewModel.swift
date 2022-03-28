@@ -45,11 +45,10 @@ final class HomeViewControllerViewModel {
     /// x being closer to 1 means when last of currently fetched products
     /// is displayed, 0 means fetch as the first of current fetched products
     /// is displayed.
-    let fetchThreshold: Double
+    private let fetchThreshold: Double
     
-    var pageNumber = 1
-    
-    var lastSearchedTerm = ""
+    private var pageNumber = 1
+    private var lastSearchedTerm = ""
     
     init(networkFetcher: NetworkFetchable, fetchThreshold: Double = 0.5) {
         self.networkFetcher = networkFetcher

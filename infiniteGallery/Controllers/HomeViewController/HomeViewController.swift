@@ -10,7 +10,7 @@ import Combine
 
 class HomeViewController: UIViewController {
     
-    @IBOutlet var collectionView: UICollectionView!
+    @IBOutlet private var collectionView: UICollectionView!
     
     private let searchController = UISearchController()
     private var cancellables: Set<AnyCancellable> = []

@@ -9,7 +9,6 @@ import UIKit
 
 public class GalleryLayout: UICollectionViewLayout {
     
-    
      /// Delegate.
     public var delegate: GalleryLayoutDelegate!
     
