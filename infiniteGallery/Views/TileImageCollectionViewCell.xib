@@ -20,7 +20,7 @@
                     <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="UaL-Wj-fq6">
                         <rect key="frame" x="0.0" y="0.0" width="186" height="195"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="wolf" translatesAutoresizingMaskIntoConstraints="NO" id="JmP-ju-gTK">
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="JmP-ju-gTK">
                                 <rect key="frame" x="0.0" y="0.0" width="186" height="195"/>
                                 <constraints>
                                     <constraint firstAttribute="height" priority="750" constant="195" id="jIG-oW-cca"/>
@@ -57,7 +57,6 @@
         </collectionViewCell>
     </objects>
     <resources>
-        <image name="wolf" width="317" height="308.5"/>
         <systemColor name="systemRedColor">
             <color red="1" green="0.23137254901960785" blue="0.18823529411764706" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
